@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'dart:math' as math;
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_constants.dart';
@@ -13,35 +12,88 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen>
     with TickerProviderStateMixin {
-  late AnimationController _particleController;
-  late AnimationController _pulseController;
-  late Animation<double> _pulseAnimation;
+  late AnimationController _logoController;
+  late AnimationController _waveController;
+  late AnimationController _textController;
+  late AnimationController _progressController;
+
+  late Animation<double> _logoScale;
+  late Animation<double> _logoRotation;
+  late Animation<double> _waveAnimation;
+  late Animation<double> _textFade;
+  late Animation<double> _progressAnimation;
 
   @override
   void initState() {
     super.initState();
     _initializeAnimations();
+    _startAnimationSequence();
     _navigateToHome();
   }
 
   void _initializeAnimations() {
-    _particleController = AnimationController(
-      duration: const Duration(seconds: 3),
+    // Logo animations
+    _logoController = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    );
+
+    _logoScale = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _logoController, curve: Curves.elasticOut),
+    );
+
+    _logoRotation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _logoController, curve: Curves.easeInOut),
+    );
+
+    // Wave animation
+    _waveController = AnimationController(
+      duration: const Duration(seconds: 2),
       vsync: this,
     )..repeat();
 
-    _pulseController = AnimationController(
-      duration: const Duration(seconds: 2),
-      vsync: this,
-    )..repeat(reverse: true);
+    _waveAnimation =
+        Tween<double>(begin: 0.0, end: 1.0).animate(_waveController);
 
-    _pulseAnimation = Tween<double>(
-      begin: 0.8,
-      end: 1.2,
-    ).animate(CurvedAnimation(
-      parent: _pulseController,
-      curve: Curves.easeInOut,
-    ));
+    // Text animation
+    _textController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+
+    _textFade = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _textController, curve: Curves.easeIn),
+    );
+
+    // Progress animation
+    _progressController = AnimationController(
+      duration: const Duration(milliseconds: 2000),
+      vsync: this,
+    );
+
+    _progressAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _progressController, curve: Curves.easeInOut),
+    );
+  }
+
+  void _startAnimationSequence() async {
+    // Check if still mounted before each animation
+    if (!mounted) return;
+
+    // Start logo animation
+    await _logoController.forward();
+
+    // Start text animation with delay
+    if (!mounted) return;
+    await Future.delayed(const Duration(milliseconds: 300));
+    if (!mounted) return;
+    await _textController.forward();
+
+    // Start progress animation
+    if (!mounted) return;
+    await Future.delayed(const Duration(milliseconds: 200));
+    if (!mounted) return;
+    _progressController.forward();
   }
 
   void _navigateToHome() {
@@ -54,8 +106,10 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void dispose() {
-    _particleController.dispose();
-    _pulseController.dispose();
+    _logoController.dispose();
+    _waveController.dispose();
+    _textController.dispose();
+    _progressController.dispose();
     super.dispose();
   }
 
@@ -68,109 +122,174 @@ class _SplashScreenState extends State<SplashScreen>
         ),
         child: Stack(
           children: [
-            // Animated Particles
-            ...List.generate(15, (index) => _buildFloatingParticle(index)),
+            // Animated wave background
+            ...List.generate(3, (index) => _buildWaveLayer(index)),
 
-            // Main Content
+            // Main content
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Animated Logo with Glow Effect
+                  // Professional logo with modern design
                   AnimatedBuilder(
-                    animation: _pulseAnimation,
+                    animation: _logoController,
                     builder: (context, child) {
                       return Transform.scale(
-                        scale: _pulseAnimation.value,
-                        child: Container(
-                          padding:
-                              const EdgeInsets.all(AppDimensions.paddingXL),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppColors.white.withOpacity(0.3),
-                                blurRadius: 30,
-                                spreadRadius: 10,
+                        scale: _logoScale.value,
+                        child: Transform.rotate(
+                          angle: _logoRotation.value * 0.1,
+                          child: Container(
+                            width: 140,
+                            height: 140,
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                colors: [
+                                  AppColors.white,
+                                  AppColors.electricBlue,
+                                  AppColors.primaryMagenta,
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
                               ),
-                              BoxShadow(
-                                color:
-                                    AppColors.primaryMagenta.withOpacity(0.4),
-                                blurRadius: 50,
-                                spreadRadius: 20,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppColors.white.withOpacity(0.4),
+                                  blurRadius: 30,
+                                  spreadRadius: 0,
+                                ),
+                                BoxShadow(
+                                  color:
+                                      AppColors.primaryMagenta.withOpacity(0.3),
+                                  blurRadius: 50,
+                                  spreadRadius: 10,
+                                ),
+                              ],
+                            ),
+                            child: Container(
+                              margin: const EdgeInsets.all(8),
+                              decoration: const BoxDecoration(
+                                gradient: AppColors.primaryGradient,
+                                shape: BoxShape.circle,
                               ),
-                            ],
-                          ),
-                          child: const Icon(
-                            Icons.shopping_bag_rounded,
-                            size: 80,
-                            color: AppColors.white,
+                              child: const Icon(
+                                Icons.shopping_bag_rounded,
+                                size: 80,
+                                color: AppColors.white,
+                              ),
+                            ),
                           ),
                         ),
                       );
                     },
                   ),
 
-                  const SizedBox(height: AppDimensions.paddingXL),
-
-                  // App Name with Gradient Text Effect
-                  ShaderMask(
-                    shaderCallback: (bounds) => const LinearGradient(
-                      colors: [AppColors.white, AppColors.electricBlue],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ).createShader(bounds),
-                    child: const Text(
-                      AppStrings.appName,
-                      style: TextStyle(
-                        fontSize: 48,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.white,
-                        letterSpacing: 2,
-                      ),
-                    ),
-                  )
-                      .animate()
-                      .fadeIn(duration: const Duration(milliseconds: 1000))
-                      .slideY(begin: 0.3, end: 0)
-                      .then()
-                      .shimmer(
-                        duration: const Duration(seconds: 2),
-                        color: AppColors.white.withOpacity(0.6),
-                      ),
-
-                  const SizedBox(height: AppDimensions.paddingM),
-
-                  // Tagline
-                  Text(
-                    AppStrings.appTagline,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: AppColors.white.withOpacity(0.9),
-                      fontWeight: FontWeight.w300,
-                      letterSpacing: 1,
-                    ),
-                  )
-                      .animate(delay: const Duration(milliseconds: 500))
-                      .fadeIn(duration: const Duration(milliseconds: 800))
-                      .slideY(begin: 0.2, end: 0),
-
                   const SizedBox(height: AppDimensions.paddingXXL),
 
-                  // Loading Indicator
-                  SizedBox(
-                    width: 60,
-                    height: 60,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 3,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        AppColors.white.withOpacity(0.8),
-                      ),
-                    ),
-                  )
-                      .animate(delay: const Duration(milliseconds: 1000))
-                      .fadeIn(duration: const Duration(milliseconds: 600))
-                      .scale(begin: const Offset(0.5, 0.5)),
+                  // Modern app name with professional typography
+                  AnimatedBuilder(
+                    animation: _textController,
+                    builder: (context, child) {
+                      return Opacity(
+                        opacity: _textFade.value,
+                        child: Column(
+                          children: [
+                            ShaderMask(
+                              shaderCallback: (bounds) => const LinearGradient(
+                                colors: [
+                                  AppColors.white,
+                                  AppColors.electricBlue,
+                                  AppColors.white,
+                                ],
+                                stops: [0.0, 0.5, 1.0],
+                              ).createShader(bounds),
+                              child: const Text(
+                                AppStrings.appName,
+                                style: TextStyle(
+                                  fontSize: 52,
+                                  fontWeight: FontWeight.w900,
+                                  color: AppColors.white,
+                                  letterSpacing: 3,
+                                  height: 1.1,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: AppDimensions.paddingS),
+                            Container(
+                              height: 3,
+                              width: 100,
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                  colors: [
+                                    AppColors.electricBlue,
+                                    AppColors.primaryMagenta,
+                                  ],
+                                ),
+                                borderRadius: BorderRadius.circular(2),
+                              ),
+                            ),
+                            const SizedBox(height: AppDimensions.paddingM),
+                            Text(
+                              AppStrings.appTagline.toUpperCase(),
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: AppColors.white.withOpacity(0.9),
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 4,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+
+                  const SizedBox(height: AppDimensions.paddingXXL * 2),
+
+                  // Modern progress indicator
+                  AnimatedBuilder(
+                    animation: _progressController,
+                    builder: (context, child) {
+                      return Column(
+                        children: [
+                          Container(
+                            width: 200,
+                            height: 4,
+                            decoration: BoxDecoration(
+                              color: AppColors.white.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Container(
+                                width: 200 * _progressAnimation.value,
+                                height: 4,
+                                decoration: BoxDecoration(
+                                  gradient: const LinearGradient(
+                                    colors: [
+                                      AppColors.electricBlue,
+                                      AppColors.primaryMagenta,
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(2),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: AppDimensions.paddingM),
+                          Text(
+                            'Loading amazing products...',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: AppColors.white.withOpacity(0.7),
+                              fontWeight: FontWeight.w400,
+                              letterSpacing: 1,
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
@@ -180,50 +299,57 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 
-  Widget _buildFloatingParticle(int index) {
-    final random = math.Random(index);
-    final startX = random.nextDouble();
-    final startY = random.nextDouble();
-    final size = 2.0 + random.nextDouble() * 4;
-    final duration = 2000 + random.nextInt(2000);
-    final delay = random.nextInt(2000);
-
-    return Positioned(
-      left: MediaQuery.of(context).size.width * startX,
-      top: MediaQuery.of(context).size.height * startY,
-      child: AnimatedBuilder(
-        animation: _particleController,
-        builder: (context, child) {
-          final progress = (_particleController.value + (delay / 1000)) % 1.0;
-          final opacity = (math.sin(progress * math.pi * 2) + 1) / 2;
-
-          return Transform.translate(
-            offset: Offset(
-              math.sin(progress * math.pi * 2) * 20,
-              -progress * 30,
+  Widget _buildWaveLayer(int index) {
+    return AnimatedBuilder(
+      animation: _waveController,
+      builder: (context, child) {
+        return Positioned.fill(
+          child: CustomPaint(
+            painter: WavePainter(
+              animationValue: _waveAnimation.value,
+              layer: index,
             ),
-            child: Container(
-              width: size,
-              height: size,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppColors.white.withOpacity(opacity * 0.6),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.white.withOpacity(opacity * 0.3),
-                    blurRadius: size * 2,
-                    spreadRadius: 1,
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
-    )
-        .animate(delay: Duration(milliseconds: delay))
-        .fadeIn(duration: Duration(milliseconds: duration ~/ 4))
-        .then()
-        .fadeOut(duration: Duration(milliseconds: duration ~/ 4));
+          ),
+        );
+      },
+    );
+  }
+}
+
+class WavePainter extends CustomPainter {
+  final double animationValue;
+  final int layer;
+
+  WavePainter({required this.animationValue, required this.layer});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..style = PaintingStyle.fill
+      ..color = AppColors.white.withOpacity(0.05 - layer * 0.01);
+
+    final path = Path();
+    final waveHeight = 30.0 + layer * 10;
+    final waveLength = size.width / (2 + layer);
+
+    path.moveTo(0, size.height);
+
+    for (double x = 0; x <= size.width; x += 1) {
+      final y = size.height -
+          waveHeight *
+              math.sin((x / waveLength + animationValue * 2 * math.pi + layer) %
+                  (2 * math.pi));
+      path.lineTo(x, y);
+    }
+
+    path.lineTo(size.width, size.height);
+    path.close();
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(WavePainter oldDelegate) {
+    return oldDelegate.animationValue != animationValue;
   }
 }
