@@ -649,17 +649,17 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ),
 
-            const SizedBox(height: AppDimensions.paddingS),
+            const SizedBox(height: 4),
 
-            // Info area uses Expanded/Flexible to adapt to tight grid cell heights
+            // Info area with minimal spacing to prevent overflow
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 2),
+                padding: const EdgeInsets.symmetric(vertical: 1),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    // Name & rating (more compact)
+                    // Name & rating (minimal spacing)
                     Flexible(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -668,23 +668,23 @@ class _HomeScreenState extends State<HomeScreen>
                           Text(
                             product.name,
                             style: const TextStyle(
-                              fontSize: 11,
+                              fontSize: 10,
                               fontWeight: FontWeight.w600,
                               height: 1.0,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          const SizedBox(height: 2),
+                          const SizedBox(height: 1),
                           Row(
                             children: [
                               const Icon(Icons.star,
-                                  size: 9, color: Colors.amber),
-                              const SizedBox(width: 3),
+                                  size: 8, color: Colors.amber),
+                              const SizedBox(width: 2),
                               Text(
                                 product.rating.toString(),
                                 style: const TextStyle(
-                                    fontSize: 9, fontWeight: FontWeight.w500),
+                                    fontSize: 8, fontWeight: FontWeight.w500),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -692,7 +692,7 @@ class _HomeScreenState extends State<HomeScreen>
                                 child: Text(
                                   ' (${product.reviewCount})',
                                   style: TextStyle(
-                                      fontSize: 9,
+                                      fontSize: 8,
                                       color: Theme.of(context)
                                           .textTheme
                                           .bodySmall
@@ -707,6 +707,8 @@ class _HomeScreenState extends State<HomeScreen>
                       ),
                     ),
 
+                    const SizedBox(height: 2),
+
                     // Price row
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
@@ -715,7 +717,7 @@ class _HomeScreenState extends State<HomeScreen>
                           child: Text(
                             '\$${product.price.toStringAsFixed(2)}',
                             style: const TextStyle(
-                              fontSize: 12,
+                              fontSize: 11,
                               fontWeight: FontWeight.bold,
                               color: AppColors.primaryViolet,
                             ),
@@ -725,11 +727,11 @@ class _HomeScreenState extends State<HomeScreen>
                         ),
                         if (product.hasDiscount)
                           Padding(
-                            padding: const EdgeInsets.only(left: 6),
+                            padding: const EdgeInsets.only(left: 4),
                             child: Text(
                               '\$${product.originalPrice.toStringAsFixed(2)}',
                               style: TextStyle(
-                                fontSize: 9,
+                                fontSize: 8,
                                 decoration: TextDecoration.lineThrough,
                                 color: Theme.of(context)
                                     .textTheme

@@ -109,11 +109,13 @@ class _GradientButtonState extends State<GradientButton>
                   borderRadius: BorderRadius.circular(widget.borderRadius),
                   onTap: widget.isLoading ? null : widget.onPressed,
                   child: Container(
+                    constraints: const BoxConstraints(minWidth: 120),
                     padding: const EdgeInsets.symmetric(
                       horizontal: AppDimensions.paddingL,
                       vertical: AppDimensions.paddingM,
                     ),
                     child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         if (widget.icon != null && !widget.isLoading) ...[
@@ -132,15 +134,20 @@ class _GradientButtonState extends State<GradientButton>
                             ),
                           )
                         else
-                          Text(
-                            widget.text,
-                            style: widget.textStyle ??
-                                const TextStyle(
-                                  color: AppColors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: 0.5,
-                                ),
+                          Flexible(
+                            child: Text(
+                              widget.text,
+                              style: widget.textStyle ??
+                                  const TextStyle(
+                                    color: AppColors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 0.5,
+                                  ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                       ],
                     ),

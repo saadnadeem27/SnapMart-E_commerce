@@ -384,25 +384,33 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                     children: [
                       Row(
                         children: [
-                          Text(
-                            '\$${widget.product.price.toStringAsFixed(2)}',
-                            style: const TextStyle(
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.primaryViolet,
+                          Flexible(
+                            child: Text(
+                              '\$${widget.product.price.toStringAsFixed(2)}',
+                              style: const TextStyle(
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.primaryViolet,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           if (widget.product.hasDiscount) ...[
                             const SizedBox(width: AppDimensions.paddingS),
-                            Text(
-                              '\$${widget.product.originalPrice.toStringAsFixed(2)}',
-                              style: TextStyle(
-                                fontSize: 18,
-                                decoration: TextDecoration.lineThrough,
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.color,
+                            Flexible(
+                              child: Text(
+                                '\$${widget.product.originalPrice.toStringAsFixed(2)}',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  decoration: TextDecoration.lineThrough,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.color,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                           ],
