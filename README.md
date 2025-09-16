@@ -181,14 +181,14 @@ lib/
 - **Loading States**: Skeleton screens and progress indicators
 - **Gesture-based**: Swipe actions and pull-to-refresh
 
-## 📱 Screenshots
+<!-- ## 📱 Screenshots
 
 > **Note**: Add your app screenshots here once available
 
 ```
 [Splash Screen] [Home Screen] [Product Details]
 [Shopping Cart] [Checkout]    [User Profile]
-```
+``` -->
 
 ## 🔧 Development
 
@@ -220,7 +220,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Saad Nadeem**
 - GitHub: [@saadnadeem27](https://github.com/saadnadeem27)
-- Portfolio: [Your Portfolio Website]
 - LinkedIn: https://www.linkedin.com/in/saad-nadeem-07-an-expert-flutter-developer/
 
 ## 🙏 Acknowledgments
