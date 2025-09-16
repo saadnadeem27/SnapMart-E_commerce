@@ -71,7 +71,8 @@ class _AuthScreenState extends State<AuthScreen>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     _buildProfessionalLogo(),
-                    const SizedBox(height: AppDimensions.paddingS), // Reduced spacing
+                    const SizedBox(
+                        height: AppDimensions.paddingS), // Reduced spacing
                     _buildWelcomeText(),
                   ],
                 ),
@@ -266,7 +267,8 @@ class _AuthScreenState extends State<AuthScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: AppDimensions.paddingM), // Reduced from paddingL
+            const SizedBox(
+                height: AppDimensions.paddingM), // Reduced from paddingL
 
             // Email Field
             _buildModernTextField(
@@ -276,7 +278,8 @@ class _AuthScreenState extends State<AuthScreen>
               hint: 'Enter your email address',
             ),
 
-            const SizedBox(height: AppDimensions.paddingM), // Reduced from paddingL
+            const SizedBox(
+                height: AppDimensions.paddingM), // Reduced from paddingL
 
             // Password Field
             _buildModernTextField(
@@ -311,7 +314,8 @@ class _AuthScreenState extends State<AuthScreen>
               ),
             ),
 
-            const SizedBox(height: AppDimensions.paddingL), // Reduced from paddingXL
+            const SizedBox(
+                height: AppDimensions.paddingL), // Reduced from paddingXL
 
             // Login Button
             GradientButton(
@@ -320,7 +324,8 @@ class _AuthScreenState extends State<AuthScreen>
               gradient: AppColors.primaryGradient,
             ),
 
-            const SizedBox(height: AppDimensions.paddingL), // Reduced from paddingXL
+            const SizedBox(
+                height: AppDimensions.paddingL), // Reduced from paddingXL
 
             // Divider
             Row(
@@ -343,7 +348,8 @@ class _AuthScreenState extends State<AuthScreen>
               ],
             ),
 
-            const SizedBox(height: AppDimensions.paddingL), // Reduced from paddingXL
+            const SizedBox(
+                height: AppDimensions.paddingL), // Reduced from paddingXL
 
             // Social Login Buttons
             Row(
@@ -366,7 +372,8 @@ class _AuthScreenState extends State<AuthScreen>
               ],
             ),
 
-            const SizedBox(height: AppDimensions.paddingL), // Reduced from paddingXL
+            const SizedBox(
+                height: AppDimensions.paddingL), // Reduced from paddingXL
           ],
         ),
       ),

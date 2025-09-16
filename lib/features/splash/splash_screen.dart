@@ -134,53 +134,94 @@ class _SplashScreenState extends State<SplashScreen>
                   AnimatedBuilder(
                     animation: _logoController,
                     builder: (context, child) {
-                      return Transform.scale(
-                        scale: _logoScale.value,
-                        child: Transform.rotate(
-                          angle: _logoRotation.value * 0.1,
-                          child: Container(
-                            width: 140,
-                            height: 140,
-                            decoration: BoxDecoration(
-                              gradient: const LinearGradient(
-                                colors: [
-                                  AppColors.white,
-                                  AppColors.electricBlue,
-                                  AppColors.primaryMagenta,
-                                ],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: AppColors.white.withOpacity(0.4),
-                                  blurRadius: 30,
-                                  spreadRadius: 0,
+                        // Use a Stack so we can render a soft pulsating glow behind the logo
+                        return Transform.scale(
+                          scale: _logoScale.value,
+                          child: Transform.rotate(
+                            angle: _logoRotation.value * 0.1,
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                // Pulsating radial glow (powered by _waveAnimation)
+                                AnimatedBuilder(
+                                  animation: _waveController,
+                                  builder: (context, _) {
+                                    final glow = 0.18 + _waveAnimation.value * 0.12;
+                                    return Container(
+                                      width: 220,
+                                      height: 220,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        gradient: RadialGradient(
+                                          colors: [
+                                            AppColors.primaryMagenta.withOpacity(glow),
+                                            AppColors.primaryViolet.withOpacity(glow * 0.6),
+                                            AppColors.electricBlue.withOpacity(glow * 0.2),
+                                          ],
+                                          stops: const [0.0, 0.6, 1.0],
+                                        ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: AppColors.primaryMagenta.withOpacity(glow),
+                                            blurRadius: 60,
+                                            spreadRadius: 8,
+                                          ),
+                                          BoxShadow(
+                                            color: AppColors.electricBlue.withOpacity(glow * 0.6),
+                                            blurRadius: 100,
+                                            spreadRadius: 20,
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
                                 ),
-                                BoxShadow(
-                                  color:
-                                      AppColors.primaryMagenta.withOpacity(0.3),
-                                  blurRadius: 50,
-                                  spreadRadius: 10,
+
+                                // Actual logo container
+                                Container(
+                                  width: 140,
+                                  height: 140,
+                                  decoration: BoxDecoration(
+                                    gradient: const LinearGradient(
+                                      colors: [
+                                        AppColors.white,
+                                        AppColors.electricBlue,
+                                        AppColors.primaryMagenta,
+                                      ],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                    ),
+                                    shape: BoxShape.circle,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: AppColors.white.withOpacity(0.45),
+                                        blurRadius: 30,
+                                        spreadRadius: 0,
+                                      ),
+                                      BoxShadow(
+                                        color: AppColors.primaryMagenta.withOpacity(0.28),
+                                        blurRadius: 40,
+                                        spreadRadius: 8,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Container(
+                                    margin: const EdgeInsets.all(8),
+                                    decoration: const BoxDecoration(
+                                      gradient: AppColors.primaryGradient,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Icon(
+                                      Icons.shopping_bag_rounded,
+                                      size: 80,
+                                      color: AppColors.white,
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
-                            child: Container(
-                              margin: const EdgeInsets.all(8),
-                              decoration: const BoxDecoration(
-                                gradient: AppColors.primaryGradient,
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.shopping_bag_rounded,
-                                size: 80,
-                                color: AppColors.white,
-                              ),
-                            ),
                           ),
-                        ),
-                      );
+                        );
                     },
                   ),
 
@@ -197,20 +238,31 @@ class _SplashScreenState extends State<SplashScreen>
                             ShaderMask(
                               shaderCallback: (bounds) => const LinearGradient(
                                 colors: [
-                                  AppColors.white,
+                                  Color(0xFFFDFCFB),
+                                 AppColors.electricBlue,
+                                  Color(0xFFFDFCFB),
                                   AppColors.electricBlue,
-                                  AppColors.white,
+                                  Color(0xFFF7F7F7),
                                 ],
-                                stops: [0.0, 0.5, 1.0],
+                                stops: [0.0, 0.28, 0.55, 0.85, 1.0],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
                               ).createShader(bounds),
                               child: const Text(
                                 AppStrings.appName,
                                 style: TextStyle(
-                                  fontSize: 52,
+                                  fontSize: 56,
                                   fontWeight: FontWeight.w900,
                                   color: AppColors.white,
-                                  letterSpacing: 3,
-                                  height: 1.1,
+                                  letterSpacing: 4,
+                                  height: 1.0,
+                                  shadows: [
+                                    Shadow(
+                                      blurRadius: 18.0,
+                                      color: Color.fromRGBO(0, 0, 0, 0.25),
+                                      offset: Offset(0, 6),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
